@@ -1,0 +1,159 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<style>
+	.onoffswitch-inner:before{
+		content:'启用'
+	}
+	.onoffswitch-inner:after{
+		content:'禁用';
+		color: #FFFFFF;
+		background-color:#555;
+	}
+</style>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-imgManage-edit" th:object="${imgManage}">
+            <input id="imgId" name="imgId" th:field="*{imgId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">图片菜单：</label>
+				<div class="col-sm-2">
+					<input id="treeId" name="menuId" type="hidden">
+					<input class="form-control" id="treeName" name="menuName" th:field="*{menuName}" onclick="selectWebMenuTree()" type="text" readonly="true">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片名称：</label>
+				<div class="col-sm-2">
+					<input id="imageName" name="imageName" th:field="*{imageName}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片描述：</label>
+				<div class="col-sm-8">
+					<!--<input id="imageDesc" name="imageDesc" class="form-control" type="text">-->
+					<textarea id="imageDesc" name="imageDesc" th:field="*{imageDesc}" class="form-control"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片：</label>
+				<div class="col-sm-8">
+					<img alt="imageUrl" id="imageShow"  th:src="(${imageUrl} == '' ) ? @{/img/no_img.png} : *{imageUrl}">
+					<input id="imageUrl" name="imageUrl" type="hidden" th:field="*{imageUrl}">
+					<a class="btn btn-primary" id="upload"><i class="fa fa-plus"></i>&nbsp;上传图片</a>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片分类：</label>
+				<div class="col-sm-8">
+					<label class="radio-box"> <input type="radio" th:field="*{imageSort}" name="imageSort" value="B" /> Banner </label>
+					<label class="radio-box"> <input type="radio" th:field="*{imageSort}" name="imageSort" value="J" /> 介绍 </label>
+					<label class="radio-box"> <input type="radio" th:field="*{imageSort}" name="imageSort" value="L" /> 列表 </label>
+					<label class="radio-box"> <input type="radio" th:field="*{imageSort}" name="imageSort" value="F" /> 底部循环 </label>
+					<label class="radio-box"> <input type="radio" th:field="*{imageSort}" name="imageSort" value="P" /> 拼图 </label>
+					<label class="radio-box"> <input type="radio" th:field="*{imageSort}" name="imageSort" value="Q" /> 其他 </label>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片内容：</label>
+				<div class="col-sm-8">
+					<input id="imageContent" name="imageContent" th:field="*{imageContent}" type="hidden">
+					<textarea id="editor" class="editor" name="editor" rows="30" cols="80"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">显示顺序：</label>
+				<div class="col-sm-1">
+					<input id="orderNum" name="orderNum" th:field="*{orderNum}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">状态：</label>
+				<input type="hidden" name="status" >
+				<div class="col-sm-8">
+					<!--<input id="status" name="status" class="form-control" type="text">-->
+					<div class="onoffswitch">
+						<input type="checkbox" class="onoffswitch-checkbox"  id="status"  th:checked="${imgManage.status == '0' ? true : false}">
+						<label class="onoffswitch-label" for="status">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+	<script th:src="@{/ajax/libs/ckeditor/ckeditor.js}"></script>
+	<script th:src="@{/ajax/libs/ajaxFileUpload/ajaxupload.js}"></script>
+	<script type="text/javascript">
+        $(function () {
+            new AjaxUpload('#upload', {
+                action: ctx + "/file/cloudUpload",
+                name: 'upload',
+                autoSubmit: true,
+                responseType: "json",
+                onSubmit: function (file, extension) {
+                    if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))) {
+                        alert('只支持jpg、png、gif格式的图片！');
+                        return false;
+                    }
+                },
+                onComplete: function (file, model) {
+                    $('#imageShow').attr('src', model.url);
+                    $('#imageUrl').val(model.url);
+                }
+            });
+        });
+	</script>
+    <script type="text/javascript">
+		var prefix = ctx + "img/imgManage";
+
+		var content = $("#imageContent").val();
+		CKEDITOR.replace("editor").setData(content);
+
+        /*图片管理-新增-选择图片菜单树*/
+        function selectWebMenuTree() {
+            var treeId = $("#treeId").val();
+            var menuId = $.common.isEmpty(treeId) ? "1" : $("#treeId").val();
+            var options = {
+                title: '选择图片分类',
+                width: "380",
+                url: ctx + "menu/webMenu/selectMenuTree/" + menuId,
+                callBack: doSubmit
+            };
+            $.modal.openOptions(options);
+        }
+
+        function doSubmit(index, layero){
+            var tree = layero.find("iframe")[0].contentWindow.$._tree;
+            if ($.tree.allowAllLevels(tree)) {
+                var body = layer.getChildFrame('body', index);
+                $("#treeId").val(body.find('#treeId').val());
+                $("#treeName").val(body.find('#treeName').val());
+                layer.close(index);
+            }
+        }
+
+        $("#form-imgManage-edit").validate({
+			rules:{
+                imageName:{
+                    required:true,
+                },
+			}
+		});
+		
+		function submitHandler() {
+            var status = $("#status").is(':checked') == true ? 0 : 1;
+            $("input[name='status']").val(status);
+			var sHTML = CKEDITOR.instances.editor.getData();
+			$("#imageContent").val(sHTML);
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-imgManage-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

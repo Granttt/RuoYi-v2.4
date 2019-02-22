@@ -1,0 +1,183 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<style>
+	.onoffswitch-inner:before{
+		content:'URL'
+	}
+	.onoffswitch-inner:after{
+		content:'详情';
+		color: #FFFFFF;
+		background-color:#555;
+	}
+</style>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-projInfo-edit" th:object="${projInfo}">
+            <input id="id" name="id" th:field="*{id}"  type="hidden">
+			<div class="form-group">
+				<label class="col-sm-3 control-label">项目菜单：</label>
+				<div class="col-sm-2">
+					<input name="menuId"   th:field="*{menuId}" type="hidden" id="treeId"/>
+					<input id="treeName" name="menuName" th:field="*{menuName}" onclick="selectWebMenuTree()" readonly="true" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标题：</label>
+				<div class="col-sm-4">
+					<input id="title" name="title" th:field="*{title}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">作者：</label>
+				<div class="col-sm-2">
+					<input id="author" name="author" th:field="*{author}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">合作方：</label>
+				<div class="col-sm-2">
+					<input id="partner" name="partner" th:field="*{partner}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">缩略图：</label>
+				<div class="col-sm-8">
+					<img alt="image" id="imageShow"  th:src="(${image} == '' ) ? @{/img/no_img.png} : *{image}">
+					<input type="hidden" id="image" name="image" th:field="*{image}">
+					<a class="btn btn-primary" id="upload"><i class="fa fa-cloud-upload"></i>&nbsp;上传图片</a>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">打开方式：</label>
+				<div class="col-sm-8">
+					<div class="onoffswitch">
+						<input type="checkbox" id="openMode" name="openMode" th:checked="${projInfo.openMode == '0' ? true : false}" class="onoffswitch-checkbox">
+						<label class="onoffswitch-label" for="openMode">
+							<span class="onoffswitch-inner"></span>
+							<span class="onoffswitch-switch"></span>
+						</label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">项目链接：</label>
+				<div class="col-sm-4">
+					<input id="link" name="link" th:field="*{link}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">描述、摘要：</label>
+				<div class="col-sm-4">
+					<textarea id="description" name="description" th:field="*{description}" dateformat="yyyy-MM-dd" class="form-control"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">制作日期：</label>
+				<div class="col-sm-3">
+					<!--*{productionTime}-->
+					<input type="text" id="laydate" th:field="${#dates.format(projInfo.productionTime, 'yyyy/MM/dd HH:mm')}" name="productionTime"  class="time-input form-control" >
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">排序：</label>
+				<div class="col-sm-1">
+					<input id="oderNum" name="oderNum" th:field="*{oderNum}" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">内容：</label>
+				<div class="col-sm-8">
+					<input id="content" name="content" th:field="*{content}" type="hidden">
+					<textarea id="editor" class="editor" name="editor" rows="80" cols="80"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">是否典型案例：</label>
+				<div class="col-sm-8">
+					<div class="radio-box" th:each="dict : ${@dict.getType('sys_yes_no')}">
+						<input type="radio" th:id="${dict.dictCode}" name="typical" th:value="${dict.dictValue}" th:field="*{typical}">
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">备注信息：</label>
+				<div class="col-sm-4">
+					<textarea id="remarks" name="remarks" th:field="*{remarks}" class="form-control"></textarea>
+				</div>
+			</div>
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+	<script th:src="@{/ajax/libs/ckeditor/ckeditor.js}"></script>
+	<script th:src="@{/ajax/libs/ajaxFileUpload/ajaxupload.js}"></script>
+	<script type="text/javascript">
+		$(function () {
+			new AjaxUpload('#upload', {
+				action: ctx + "/file/cloudUpload",
+				name: 'upload',
+				autoSubmit: true,
+				responseType: "json",
+				onSubmit: function (file, extension) {
+					if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))) {
+						alert('只支持jpg、png、gif格式的图片！');
+						return false;
+					}
+				},
+				onComplete: function (file, model) {
+					$('#imageShow').attr('src', model.url);
+					$('#image').val(model.url);
+				}
+			});
+		});
+	</script>
+    <script type="text/javascript">
+		var prefix = ctx + "proj/projInfo";
+
+		var content = $("#content").val();
+		CKEDITOR.replace("editor").setData(content);
+
+		/*项目管理-新增-选择项目菜单树*/
+		function selectWebMenuTree() {
+			var treeId = $("#treeId").val();
+			var menuId = $.common.isEmpty(treeId) ? "1" : $("#treeId").val();
+			var options = {
+				title: '选择项目菜单',
+				width: "380",
+				url: ctx + "menu/webMenu/selectMenuTree/" + menuId,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			if ($.tree.notAllowParents(tree)) {
+				var body = layer.getChildFrame('body', index);
+				$("#treeId").val(body.find('#treeId').val());
+				$("#treeName").val(body.find('#treeName').val());
+				layer.close(index);
+			}
+		}
+
+		$("#form-projInfo-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+				var openMode = $("#openMode").is(':checked') == true ? 0 : 1;
+				$("input[name='openMode']").val(openMode);
+				var sHTML = CKEDITOR.instances.editor.getData();
+				$("#content").val(sHTML);
+	            $.operate.save(prefix + "/edit", $('#form-projInfo-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

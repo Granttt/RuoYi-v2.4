@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.website.profile.mapper.ProfileInfoMapper">
+
+    <resultMap type="ProfileInfo" id="ProfileInfoResult">
+        <result property="proId" column="pro_id"/>
+        <result property="content" column="content"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectProfileInfoVo">
+        select pro_id, content, update_by, update_time from profile_info
+    </sql>
+
+    <select id="selectProfileInfoList" parameterType="ProfileInfo" resultMap="ProfileInfoResult">
+        <include refid="selectProfileInfoVo"/>
+        <where>
+            <if test="proId != null ">and pro_id = #{proId}</if>
+            <if test="content != null  and content != '' ">and content = #{content}</if>
+            <if test="updateBy != null  and updateBy != '' ">and update_by = #{updateBy}</if>
+            <if test="updateTime != null ">and update_time = #{updateTime}</if>
+        </where>
+    </select>
+
+    <select id="selectProfileInfoById" parameterType="Integer" resultMap="ProfileInfoResult">
+        <include refid="selectProfileInfoVo"/>
+        where pro_id = #{proId}
+    </select>
+
+    <insert id="insertProfileInfo" parameterType="ProfileInfo" useGeneratedKeys="true" keyProperty="proId">
+        insert into profile_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="content != null  and content != ''  ">content,</if>
+            update_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="content != null  and content != ''  ">#{content},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateProfileInfo" parameterType="ProfileInfo">
+        update profile_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="content != null  and content != ''  ">content = #{content},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where pro_id = #{proId}
+    </update>
+
+    <delete id="deleteProfileInfoById" parameterType="Integer">
+        delete from profile_info where pro_id = #{proId}
+    </delete>
+
+    <delete id="deleteProfileInfoByIds" parameterType="String">
+        delete from profile_info where pro_id in
+        <foreach item="proId" collection="array" open="(" separator="," close=")">
+            #{proId}
+        </foreach>
+    </delete>
+
+</mapper>

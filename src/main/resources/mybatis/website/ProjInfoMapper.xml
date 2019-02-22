@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.website.proj.mapper.ProjInfoMapper">
+
+    <resultMap type="ProjInfo" id="ProjInfoResult">
+        <result property="id" column="id"/>
+        <result property="menuId" column="menu_id"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="title" column="title"/>
+        <result property="author" column="author"/>
+        <result property="image" column="image"/>
+        <result property="link" column="link"/>
+        <result property="openMode" column="open_mode"/>
+        <result property="partner" column="partner"/>
+        <result property="description" column="description"/>
+        <result property="productionTime" column="production_time"/>
+        <result property="content" column="content"/>
+        <result property="oderNum" column="oder_num"/>
+        <result property="hits" column="hits"/>
+        <result property="typical" column="typical" />
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="remarks" column="remarks"/>
+    </resultMap>
+
+    <sql id="selectProjInfoVo">
+        select id, menu_id , title, author, image, link, open_mode, partner, description, production_time , content , oder_num, hits, typical, create_by, create_time, update_by, update_time, remarks from proj_info
+    </sql>
+
+    <select id="selectProjInfoList" parameterType="ProjInfo" resultMap="ProjInfoResult">
+        select
+        p.id,p.menu_id,p.title,p.author,p.image,p.link,p.open_mode,p.partner,p.description,p.production_time,
+        p.content,p.oder_num,p.hits,p.typical,p.create_by,p.create_time,p.update_by,p.update_time,p.remarks,w.menu_name
+        from proj_info p
+        left join web_menu w on p.menu_id = w.menu_id
+        <where>
+            <if test="menuId != null  and menuId != '' ">
+                AND (p.menu_id = #{menuId} OR p.menu_id IN ( SELECT w.menu_id FROM web_menu w WHERE
+                FIND_IN_SET
+                (#{menuId},ancestors) ))
+            </if>
+            <if test="title != null  and title != '' ">
+                and p.title = #{title}
+            </if>
+            <if test="openMode != null  and openMode != '' ">
+                and p.open_mode = #{openMode}
+            </if>
+            <if test="partner != null  and partner != '' ">
+                and p.partner = #{partner}
+            </if>
+            <if test="typical != null  and typical != '' ">
+                and p.typical = #{typical}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectProjInfoById" parameterType="String" resultMap="ProjInfoResult">
+        select
+        p.id,p.menu_id,p.title,p.author,p.image,p.link,p.open_mode,p.partner,p.description,p.production_time,
+        p.content,p.oder_num,p.hits,p.typical,p.create_by,p.create_time,p.update_by,p.update_time,p.remarks,w.menu_name
+        from proj_info p
+        left join web_menu w on p.menu_id = w.menu_id
+        where p.id = #{id}
+    </select>
+
+    <insert id="insertProjInfo" parameterType="ProjInfo">
+        insert into proj_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != '' ">id,</if>
+            <if test="menuId != null  and menuId != '' ">menu_id,</if>
+            <if test="title != null  and title != '' ">title,</if>
+            <if test="author != null  and author != '' ">author,</if>
+            <if test="image != null  and image != '' ">image,</if>
+            <if test="link != null  and link != '' ">link,</if>
+            <if test="openMode != null  and openMode != '' ">open_mode,</if>
+            <if test="partner != null  and partner != '' ">partner,</if>
+            <if test="description != null  and description != '' ">description,</if>
+            <if test="productionTime != null">production_time,</if>
+            <if test="content != null  and content != '' ">content,</if>
+            <if test="oderNum != null ">oder_num,</if>
+            <if test="hits != null ">hits,</if>
+            <if test="typical != null ">typical,</if>
+            <if test="createBy != null  and createBy != '' ">create_by,</if>
+            <if test="remarks != null  and remarks != '' ">remarks,</if>
+            create_time
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null  and id != '' ">#{id},</if>
+            <if test="menuId != null  and menuId != '' ">#{menuId},</if>
+            <if test="title != null  and title != '' ">#{title},</if>
+            <if test="author != null  and author != '' ">#{author},</if>
+            <if test="image != null  and image != '' ">#{image},</if>
+            <if test="link != null  and link != '' ">#{link},</if>
+            <if test="openMode != null  and openMode != '' ">#{openMode},</if>
+            <if test="partner != null  and partner != '' ">#{partner},</if>
+            <if test="description != null  and description != '' ">#{description},</if>
+            <if test="productionTime != null">#{productionTime},</if>
+            <if test="content != null  and content != '' ">#{content},</if>
+            <if test="oderNum != null ">#{oderNum},</if>
+            <if test="hits != null ">#{hits},</if>
+            <if test="typical != null ">#{typical},</if>
+            <if test="createBy != null  and createBy != '' ">#{createBy},</if>
+            <if test="remarks != null  and remarks != '' ">#{remarks},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateProjInfo" parameterType="ProjInfo">
+        update proj_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="menuId != null  and menuId != '' ">menu_id = #{menuId},</if>
+            <if test="title != null  and title != '' ">title = #{title},</if>
+            <if test="author != null  and author != '' ">author = #{author},</if>
+            <if test="image != null  and image != '' ">image = #{image},</if>
+            <if test="link != null  and link != '' ">link = #{link},</if>
+            <if test="openMode != null  and openMode != '' ">open_mode = #{openMode},</if>
+            <if test="partner != null  and partner != '' ">partner = #{partner},</if>
+            <if test="description != null  and description != '' ">description = #{description},</if>
+            <if test="productionTime != null">production_time = #{productionTime},</if>
+            <if test="content != null  and content != '' ">content = #{content},</if>
+            <if test="oderNum != null ">oder_num = #{oderNum},</if>
+            <if test="hits != null ">hits = #{hits},</if>
+            <if test="typical != null ">typical = #{typical},</if>
+            <if test="updateBy != null  and updateBy != '' ">update_by = #{updateBy},</if>
+            <if test="remarks != null  and remarks != '' ">remarks = #{remarks},</if>
+            update_time = sysdate()
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteProjInfoById" parameterType="String">
+        delete from proj_info where id = #{id}
+    </delete>
+
+    <delete id="deleteProjInfoByIds" parameterType="String">
+        delete from proj_info where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>

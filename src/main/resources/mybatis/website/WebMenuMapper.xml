@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ruoyi.website.menu.mapper.WebMenuMapper">
+
+    <resultMap type="WebMenu" id="WebMenuResult">
+        <result property="menuId" column="menu_id"/>
+        <result property="parentId" column="parent_id"/>
+        <result property="parentName" column="parent_name"/>
+        <result property="ancestors" column="ancestors"/>
+        <result property="menuName" column="menu_name"/>
+        <result property="menuUrl" column="menu_url"/>
+        <result property="menuKey" column="menu_key"/>
+        <result property="menuType" column="menu_type"/>
+        <result property="description" column="description"/>
+        <result property="orderNum" column="order_num"/>
+        <result property="status" column="status"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+    </resultMap>
+
+    <sql id="selectWebMenuVo">
+        select menu_id, parent_id, ancestors, menu_name, menu_url, menu_key, menu_type , description, order_num, status, del_flag, create_by, create_time, update_by, update_time from web_menu
+    </sql>
+
+    <select id="selectWebMenuList" parameterType="WebMenu" resultMap="WebMenuResult">
+        <include refid="selectWebMenuVo"/>
+        <where>
+            del_flag = '0'
+            <if test="parentId != null ">and parent_id = #{parentId}</if>
+            <if test="ancestors != null  and ancestors != '' ">and ancestors = #{ancestors}</if>
+            <if test="status != null  and status != '' ">and status = #{status}</if>
+        </where>
+        order by order_num
+    </select>
+
+    <select id="selectWebMenuById" parameterType="Long" resultMap="WebMenuResult">
+        select
+            w.menu_id,
+            w.parent_id,
+            w.ancestors,
+            w.menu_name,
+            w.menu_url,
+            w.menu_key,
+            w.menu_type,
+            w.description,
+            w.order_num,
+            w.status,
+            w.del_flag,
+            w.create_by,
+            w.create_time,
+            w.update_by,
+            w.update_time,
+            (select menu_name from web_menu where menu_id = w.parent_id) parent_name
+        from
+              web_menu w
+        where w.menu_id = #{menuId}
+    </select>
+
+    <select id="selectWebMenuCount" parameterType="WebMenu" resultType="int">
+        select count(1) from web_menu
+        where del_flag = '0'
+        <if test="menuId != null and menuId != 0">and menu_id = #{menuId}</if>
+        <if test="parentId != null and parentId != 0">and parent_id = #{parentId}</if>
+    </select>
+
+    <select id="selectWebMenuByParent" parameterType="Long" resultMap="WebMenuResult">
+        select
+            w.menu_id,
+            w.parent_id,
+            w.ancestors,
+            w.menu_name,
+            w.menu_url,
+            w.menu_key,
+            w.menu_type,
+            w.description,
+            w.order_num,
+            w.status,
+            w.del_flag,
+            w.create_by,
+            w.create_time,
+            w.update_by,
+            w.update_time,
+            (select menu_name from web_menu where menu_id = w.parent_id) parent_name
+        from
+            web_menu w
+        where w.parent_id = #{menuId} AND del_flag = '0' AND status = '0' AND menu_type != '4'
+        order by order_num
+    </select>
+
+    <select id="selectWebMenuTag" parameterType="Long" resultMap="WebMenuResult">
+        <include refid="selectWebMenuVo"/>
+        where parent_id = #{parentId} AND del_flag = '0' and menu_type = '4' and status = '0'
+        order by order_num
+    </select>
+
+    <select id="selectWebMenuChild" parameterType="WebMenu" resultMap="WebMenuResult">
+        <include refid="selectWebMenuVo"/>
+        <where>
+            del_flag = '0' and menu_type != '4' and status = '0'
+            <if test="parentId != null ">and parent_id = #{menuId}</if>
+        </where>
+        order by order_num
+    </select>
+
+    <insert id="insertWebMenu" parameterType="WebMenu" useGeneratedKeys="true" keyProperty="menuId">
+        insert into web_menu
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="parentId != null">parent_id,</if>
+            <if test="ancestors != null  and ancestors != ''">ancestors,</if>
+            <if test="menuName != null  and menuName != ''">menu_name,</if>
+            <if test="menuUrl != null  and menuUrl != ''">menu_url,</if>
+            <if test="menuKey != null  and menuKey != '' ">menu_key,</if>
+            <if test="menuType != null  and menuType != '' ">menu_type,</if>
+            <if test="description != null  and description != '' ">description,</if>
+            <if test="orderNum != null  ">order_num,</if>
+            <if test="status != null  and status != '' ">status,</if>
+            <if test="delFlag != null  and delFlag != '' ">del_flag,</if>
+            <if test="createBy != null  and createBy != '' ">create_by,</if>
+            create_time,
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="parentId != null  ">#{parentId},</if>
+            <if test="ancestors != null  and ancestors != '' ">#{ancestors},</if>
+            <if test="menuName != null  and menuName != '' ">#{menuName},</if>
+            <if test="menuUrl != null  and menuUrl != '' ">#{menuUrl},</if>
+            <if test="menuKey != null  and menuKey != '' ">#{menuKey},</if>
+            <if test="menuType != null  and menuType != '' ">#{menuType},</if>
+            <if test="description != null  and description != '' ">#{description},</if>
+            <if test="orderNum != null  ">#{orderNum},</if>
+            <if test="status != null  and status != '' ">#{status},</if>
+            <if test="delFlag != null  and delFlag != '' ">#{delFlag},</if>
+            <if test="createBy != null  and createBy != '' ">#{createBy},</if>
+            sysdate()
+        </trim>
+    </insert>
+
+    <update id="updateWebMenu" parameterType="WebMenu">
+        update web_menu
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="parentId != null  ">parent_id = #{parentId},</if>
+            <if test="ancestors != null  and ancestors != ''  ">ancestors = #{ancestors},</if>
+            <if test="menuName != null  and menuName != ''  ">menu_name = #{menuName},</if>
+            <if test="menuUrl != null  and menuUrl != ''  ">menu_url = #{menuUrl},</if>
+            <if test="menuKey != null  and menuKey != ''  ">menu_key = #{menuKey},</if>
+            <if test="menuType != null  and menuType != '' ">menu_type = #{menuType},</if>
+            <if test="description != null  and description != ''  ">description = #{description},</if>
+            <if test="orderNum != null  ">order_num = #{orderNum},</if>
+            <if test="status != null  and status != ''  ">status = #{status},</if>
+            <if test="delFlag != null  and delFlag != ''  ">del_flag = #{delFlag},</if>
+            <if test="updateBy != null  and updateBy != ''  ">update_by = #{updateBy},</if>
+            update_time = sysdate()
+        </trim>
+        where menu_id = #{menuId}
+    </update>
+
+    <delete id="deleteWebMenuById" parameterType="Integer">
+        update web_menu set del_flag = '2' where menu_id = #{menuId}
+    </delete>
+
+    <delete id="deleteWebMenuByIds" parameterType="String">
+        update web_menu set del_flag = '2' where menu_id in
+        <foreach item="menuId" collection="array" open="(" separator="," close=")">
+            #{menuId}
+        </foreach>
+    </delete>
+
+</mapper>

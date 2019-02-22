@@ -1,0 +1,124 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-cmsArticle-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标题：</label>
+				<div class="col-sm-5">
+					<input id="title" name="title" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">文章链接：</label>
+				<div class="col-sm-3">
+					<input id="link" name="link" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">文章图片：</label>
+				<div class="col-sm-8">
+					<img alt="image" id="imageShow"  th:src="@{/img/no_img.png}">
+					<input id="image" name="image" type="hidden" >
+					<a class="btn btn-primary" id="upload"><i class="fa fa-cloud-upload"></i>&nbsp;上传图片</a>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">关键字：</label>
+				<div class="col-sm-4">
+					<input id="keywords" name="keywords" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">描述、摘要：</label>
+				<div class="col-sm-5">
+					<textarea id="description" name="description" class="form-control"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">文章内容：</label>
+				<div class="col-sm-8">
+					<input id="content" name="content" type="hidden">
+					<textarea id ="editor" class="editor" name="editor" rows="30" cols="80"></textarea>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">文章来源：</label>
+				<div class="col-sm-8">
+					<input id="copyfrom" name="copyfrom" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">作者：</label>
+				<div class="col-sm-2">
+					<input id="author" name="author" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">文章来源：</label>
+				<div class="col-sm-2">
+					<input id="copyfrom" name="copyfrom" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">权重：</label>
+				<div class="col-sm-1">
+					<input id="weight" name="weight" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">备注信息：</label>
+				<div class="col-sm-5">
+					<textarea id="remarks" name="remarks" class="form-control" ></textarea>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+	<script th:src="@{/ajax/libs/ckeditor/ckeditor.js}"></script>
+	<script th:src="@{/ajax/libs/ajaxFileUpload/ajaxupload.js}"></script>
+	<script type="text/javascript">
+		$(function () {
+			new AjaxUpload('#upload', {
+				action: ctx + "/file/cloudUpload",
+				name: 'upload',
+				autoSubmit: true,
+				responseType: "json",
+				onSubmit: function (file, extension) {
+					if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))) {
+						alert('只支持jpg、png、gif格式的图片！');
+						return false;
+					}
+				},
+				onComplete: function (file, model) {
+					$('#imageShow').attr('src', model.url);
+					$('#image').val(model.url);
+				}
+			});
+		});
+	</script>
+    <script type="text/javascript">
+		var prefix = ctx + "cms/cmsArticle";
+
+		CKEDITOR.replace("editor");
+
+		$("#form-cmsArticle-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+				var sHTML = CKEDITOR.instances.editor.getData();
+				$("#content").val(sHTML);
+	            $.operate.save(prefix + "/add", $('#form-cmsArticle-add').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

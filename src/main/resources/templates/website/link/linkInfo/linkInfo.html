@@ -1,0 +1,104 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 select-table table-striped">
+            <table id="bootstrap-table" data-mobile-responsive="true"></table>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var editFlag = [[${@permission.hasPermi('link:linkInfo:edit')}]];
+    var removeFlag = [[${@permission.hasPermi('link:linkInfo:remove')}]];
+    var prefix = ctx + "link/linkInfo";
+
+    $(function () {
+        var options = {
+            url: prefix + "/list",
+            updateUrl: prefix + "/edit/{id}",
+            exportUrl: prefix + "/export",
+            modalName: "公司联系方式",
+            search: false,
+            showToggle: true,
+            showExport: true,
+            columns: [
+                {
+                    field: 'linkId',
+                    title: 'ID',
+                    visible: false
+                },
+                {
+                    field: 'tel',
+                    title: '电话',
+                    sortable: false
+                },
+                {
+                    field: 'address',
+                    title: '地址',
+                    sortable: false
+                },
+                {
+                    field: 'mail',
+                    title: 'E-Mail',
+                    sortable: false
+                },
+                {
+                    field: 'qq',
+                    title: 'QQ',
+                    sortable: false
+                },
+                {
+                    field: 'wechat',
+                    title: '微信',
+                    sortable: false
+                },
+                {
+                    field: 'weibo',
+                    title: '微博',
+                    sortable: false
+                },
+                {
+                    field: 'wxCode',
+                    title: '微信二维码',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return '<img  src=' + value + ' width=50 class="img-rounded" >';
+                    }
+                },
+                {
+                    field: 'wbCode',
+                    title: '微博二维码',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        return '<img  src=' + value + ' width=50 class="img-rounded" >';
+                    }
+                },
+                {
+                    field: 'updateBy',
+                    title: '更新者',
+                    sortable: true
+                },
+                {
+                    field: 'updateTime',
+                    title: '更新时间',
+                    sortable: true
+                },
+                {
+                    title: '操作',
+                    align: 'center',
+                    formatter: function (value, row, index) {
+                        var actions = [];
+                        actions.push('<a class="btn btn-success btn-xs ' + editFlag + '" href="#" onclick="$.operate.edit(\'' + row.linkId + '\')"><i class="fa fa-edit"></i>编辑</a> ');
+                        return actions.join('');
+                    }
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>

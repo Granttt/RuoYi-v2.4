@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<link th:href="@{/ajax/libs/fancybox/jquery.fancybox.css}" rel="stylesheet">
+<body class="gray-bg">
+<div class="wrapper wrapper-content">
+    <div class="row">
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>团队风采-banner-预览</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#">选项1</a>
+                            </li>
+                            <li><a href="#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <th:block th:each="team,index:${bannerTeamList}">
+                        <a class="fancybox" th:href="*{team.imageUrl}" th:title="${team.imageName}">
+                            <img style="width: 100%;" alt="image" th:src="*{team.imageUrl}" />
+                        </a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>团队风采-预览</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#">选项1</a>
+                            </li>
+                            <li><a href="#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <th:block th:each="team,index:${teamList}">
+                        <a class="fancybox" th:href="*{team.imageUrl}" th:title="${team.imageName}">
+                            <img alt="image" th:src="*{team.imageUrl}" />
+                        </a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-7">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>团队风采-底部轮播-预览</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#">选项1</a>
+                            </li>
+                            <li><a href="#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <div class="carousel slide" id="carousel2">
+                        <ol class="carousel-indicators">
+                            <li data-slide-to="0" data-target="#carousel2" class="active"></li>
+                            <li data-slide-to="1" data-target="#carousel2"></li>
+                            <li data-slide-to="2" data-target="#carousel2" class=""></li>
+                        </ol>
+                        <div class="carousel-inner">
+                            <th:block th:each="team,index:${lunTeamList}">
+                                <div class="item active">
+                                    <img alt="image" class="img-responsive" th:src="*{team.imageUrl}">
+                                </div>
+                            </th:block>
+                        </div>
+                        <a data-slide="prev" href="#carousel2" class="left carousel-control">
+                            <span class="icon-prev"></span>
+                        </a>
+                        <a data-slide="next" href="#carousel2" class="right carousel-control">
+                            <span class="icon-next"></span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-sm-12">
+            <div class="ibox float-e-margins">
+                <div class="ibox-title">
+                    <h5>团队风采-底部拼图-预览</h5>
+                    <div class="ibox-tools">
+                        <a class="collapse-link"><i class="fa fa-chevron-up"></i></a>
+                        <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                            <i class="fa fa-wrench"></i>
+                        </a>
+                        <ul class="dropdown-menu dropdown-user">
+                            <li><a href="#">选项1</a>
+                            </li>
+                            <li><a href="#">选项2</a>
+                            </li>
+                        </ul>
+                        <a class="close-link"><i class="fa fa-times"></i></a>
+                    </div>
+                </div>
+                <div class="ibox-content">
+                    <th:block th:each="team,index:${pinTeamList}">
+                        <a class="fancybox" th:href="*{team.imageUrl}" th:title="${team.imageName}">
+                            <img alt="image" th:src="*{team.imageUrl}" />
+                        </a>
+                    </th:block>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:src="@{/ajax/libs/fancybox/jquery.fancybox.js}"></script>
+<script>
+    $(document).ready(function () {
+        $('.fancybox').fancybox({
+            openEffect: 'none',
+            closeEffect: 'none'
+        });
+    });
+    //折叠ibox
+    $('.collapse-link').click(function () {
+        var ibox = $(this).closest('div.ibox');
+        var button = $(this).find('i');
+        var content = ibox.find('div.ibox-content');
+        content.slideToggle(200);
+        button.toggleClass('fa-chevron-up').toggleClass('fa-chevron-down');
+        ibox.toggleClass('').toggleClass('border-bottom');
+        setTimeout(function () {
+            ibox.resize();
+            ibox.find('[id^=map-]').resize();
+        }, 50);
+    });
+
+    //关闭ibox
+    $('.close-link').click(function () {
+        var content = $(this).closest('div.ibox');
+        content.remove();
+    });
+    //拖动面板
+    function WinMove() {
+        var element = "[class*=col]";
+        var handle = ".ibox-title";
+        var connect = "[class*=col]";
+        $(element).sortable({
+            handle: handle,
+            connectWith: connect,
+            tolerance: 'pointer',
+            forcePlaceholderSize: true,
+            opacity: 0.8,
+        })
+            .disableSelection();
+    };
+
+</script>
+</body>
+</html>

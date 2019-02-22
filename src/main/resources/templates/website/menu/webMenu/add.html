@@ -1,0 +1,105 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-webMenu-add">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">上级菜单：</label>
+				<div class="col-sm-8">
+					<input id="treeId" name="parentId" type="hidden" th:value="${webMenu.menuId}"/>
+					<input id="treeName" name="treeName" onclick="selectMenuTree()" th:value="${webMenu.menuName}"  readonly="true" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">菜单名称：</label>
+				<div class="col-sm-8">
+					<input id="menuName" name="menuName" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">URL：</label>
+				<div class="col-sm-8">
+					<input id="menuUrl" name="menuUrl" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">标识：</label>
+				<div class="col-sm-8">
+					<input id="menuKey" name="menuKey" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">菜单类型：</label>
+				<div class="col-sm-8">
+					<label class="radio-box"> <input type="radio" name="menuType" value="1" /> 一级 </label>
+					<label class="radio-box"> <input type="radio" name="menuType" value="2" /> 二级 </label>
+					<label class="radio-box"> <input type="radio" name="menuType" value="3" /> 三级 </label>
+					<label class="radio-box"> <input type="radio" name="menuType" value="4" /> 选项卡 </label>
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">描述：</label>
+				<div class="col-sm-8">
+					<input id="description" name="description" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">显示顺序：</label>
+				<div class="col-sm-8">
+					<input id="orderNum" name="orderNum" class="form-control" type="text">
+				</div>
+			</div>
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">状态：</label>
+				<div class="col-sm-8">
+					<div class="radio-box" th:each="dict : ${@dict.getType('sys_show_hide')}">
+						<input type="radio" th:id="${dict.dictCode}" name="status" th:value="${dict.dictValue}" th:checked="${dict.isDefault == 'Y' ? true : false}">
+						<label th:for="${dict.dictCode}" th:text="${dict.dictLabel}"></label>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "menu/webMenu";
+		$("#form-webMenu-add").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/add", $('#form-webMenu-add').serialize());
+	        }
+	    }
+
+		function selectMenuTree(){
+			var treeId = $("#treeId").val();
+			var menuId = $.common.isEmpty(treeId) ? "1" : $("#treeId").val();
+			var options = {
+				title: '选择菜单',
+				width: "380",
+				url: ctx + "menu/webMenu/selectMenuTree/" + menuId,
+				callBack: doSubmit
+			};
+			$.modal.openOptions(options);
+		}
+
+		function doSubmit(index, layero){
+			var tree = layero.find("iframe")[0].contentWindow.$._tree;
+			if ($.tree.notAllowLastLevel(tree)) {
+				var body = layer.getChildFrame('body', index);
+				$("#treeId").val(body.find('#treeId').val());
+				$("#treeName").val(body.find('#treeName').val());
+				layer.close(index);
+			}
+		}
+	</script>
+</body>
+</html>
