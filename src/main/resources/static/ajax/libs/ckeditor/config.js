@@ -3,7 +3,8 @@
  * For licensing, see https://ckeditor.com/legal/ckeditor-oss-license
  */
 CKEDITOR.editorConfig = function( config ) {
-    var base_url = "/RuoYi";
+    // var base_url = "/RuoYi";
+    var base_url = "http://127.0.0.1:8090";
     // Define changes to default configuration here. For example:
     // config.uiColor = '#AADC6E';
     // config.entities = false;

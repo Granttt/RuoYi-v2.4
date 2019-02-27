@@ -26,6 +26,7 @@ import java.util.List;
  * @date 2019-01-12
  */
 @Controller
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RequestMapping("/img/imgManage")
 public class ImgManageController extends BaseController {
     private String prefix = "website/img/imgManage";

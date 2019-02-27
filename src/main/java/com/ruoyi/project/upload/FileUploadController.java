@@ -10,10 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
@@ -25,6 +22,7 @@ import java.util.UUID;
  * @author: xingyu
  */
 @Controller
+@CrossOrigin(origins = "*",maxAge = 3600)
 @RequestMapping("/file")
 public class FileUploadController {
     @Autowired
@@ -63,7 +61,7 @@ public class FileUploadController {
             if (!target.getParentFile().exists()) {
                 target.getParentFile().mkdirs();
             }
-
+            //将上传文件写到服务器上指定的路径
             multipartFile.transferTo(target);
 
             String imgUrl = "http://localhost:80/profile/".concat(newFileName);
@@ -81,7 +79,37 @@ public class FileUploadController {
 
         return UploadImageResModel.error("isEmpty");
     }
+    /**
+     * 上传图片--保存在本地
+     */
+    @PostMapping("/picUpload")
+    @ResponseBody
+    public UploadImageResModel picUpload(@RequestParam("file") MultipartFile file) throws IOException
+    {
+        if (file == null || file.isEmpty()){
+            return UploadImageResModel.error("isEmpty");
+        }
+        //生成新的文件名及存储位置
+        String fileName = file.getOriginalFilename();
+        String newFileName = UUID.randomUUID().toString()
+                .replaceAll("-", "")
+                .concat(fileName.substring(fileName.lastIndexOf(".")));
 
+        String fullPath = UPLOAD_PATH.concat(newFileName);
+        File target = new File(fullPath);
+        //判断文件父目录是否存在
+        if (!target.getParentFile().exists()) {
+            target.getParentFile().mkdirs();
+        }
+
+        file.transferTo(target);
+
+        String imgUrl = URL_PATH.concat(newFileName);
+//        String avatar = FileUploadUtils.upload(file);//默认配置进行文件上传
+
+        return UploadImageResModel.ok(1,fileName,imgUrl);
+
+    }
     /** cloudUpload */
     @PostMapping("/cloudUpload")
     @ResponseBody

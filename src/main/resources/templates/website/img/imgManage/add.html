@@ -39,7 +39,8 @@
 				<div class="col-sm-8">
 					<img alt="imageUrl" id="imageShow"  th:src="@{/img/no_img.png}">
 					<input id="imageUrl" name="imageUrl" type="hidden" >
-					<a class="btn btn-primary" id="upload"><i class="fa fa-cloud-upload"></i>&nbsp;上传图片</a>
+					<a class="btn btn-primary" id="my-img"><i class="fa fa-cloud-upload"></i>&nbsp;上传图片</a>
+					<input type="file" style="display: none"  id="file" onchange="abc(this)"/>
 				</div>
 			</div>
 			<div class="form-group">
@@ -86,24 +87,38 @@
 	<script th:src="@{/ajax/libs/ckeditor/ckeditor.js}"></script>
 	<script th:src="@{/ajax/libs/ajaxFileUpload/ajaxupload.js}"></script>
 	<script type="text/javascript">
-        $(function () {
-            new AjaxUpload('#upload', {
-                action: ctx + "/file/cloudUpload",
-                name: 'upload',
-                autoSubmit: true,
-                responseType: "json",
-                onSubmit: function (file, extension) {
-                    if (!(extension && /^(jpg|jpeg|png|gif)$/.test(extension.toLowerCase()))) {
-                        alert('只支持jpg、png、gif格式的图片！');
-                        return false;
+        function abc(obj) {
+            if (!obj.value.match(/.jpg|.gif|.png|.bmp/i)) {
+                alert("图片格式错误！");
+                return false;
+            }
+            var formData = new FormData();
+            formData.append("file",document.getElementById("file").files[0]);
+            console.info(ctx)
+            $.ajax({
+                url: ctx + "file/picUpload",
+                data: formData,
+                type: "post",
+                //dataType: "json",
+                cache: false,//上传文件无需缓存
+                processData: false,//用于对data参数进行序列化处理 这里必须false
+                contentType: false,//必须false才会自动加上正确的Content-Type
+                success: function (data) {
+                    if (data.uploaded == "1") {
+                        alert("上传成功！");
+                        console.info("imgUrl="+data.url)
+                        $('#imageShow').attr('src', data.url);
+                        $('#imageUrl').val(data.url);
+                    }
+                    if (data.uploaded == "0") {
+                        alert(data.error);
                     }
                 },
-                onComplete: function (file, model) {
-                    $('#imageShow').attr('src', model.url);
-                    $('#imageUrl').val(model.url);
+                error: function () {
+                    alert("上传失败！");
                 }
-            });
-        });
+            })
+        }
 	</script>
     <script type="text/javascript">
 		var prefix = ctx + "img/imgManage";
