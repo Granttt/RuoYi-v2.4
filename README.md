@@ -80,3 +80,7 @@ RuoYi 源码下载：https://gitee.com/y_project/RuoYi
 RuoYi 在线提问：https://gitee.com/y_project/RuoYi/issues
 
 RuoYi 博客：https://www.oschina.net/p/ruoyi
+## 自定义功能
+增加cms文章功能
+
+图片存储：七牛云，阿里云等OSS
