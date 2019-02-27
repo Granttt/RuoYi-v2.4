@@ -1,0 +1,53 @@
+<!DOCTYPE HTML>
+<html  lang="zh" xmlns:th="http://www.thymeleaf.org">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="white-bg">
+    <div class="wrapper wrapper-content animated fadeInRight ibox-content">
+        <form class="form-horizontal m" id="form-sysOss-edit" th:object="${sysOss}">
+            <input id="fileId" name="fileId" th:field="*{fileId}"  type="hidden">
+			<div class="form-group">	
+				<label class="col-sm-3 control-label">文件名：</label>
+				<div class="col-sm-8">
+					<input id="fileName" name="fileName" th:field="*{fileName}" class="form-control" type="text" readonly>
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">图片预览：</label>
+				<div class="col-sm-8">
+					<img th:src="*{fileUrl}">
+				</div>
+			</div>
+			<div class="form-group">
+				<label class="col-sm-3 control-label">URL地址：</label>
+				<div class="col-sm-8">
+					<input id="fileUrl" name="fileUrl" th:field="*{fileUrl}" class="form-control" type="text" readonly>
+				</div>
+			</div>
+			<!--<div class="form-group">	-->
+				<!--<label class="col-sm-3 control-label">状态（0正常 1关闭）：</label>-->
+				<!--<div class="col-sm-8">-->
+					<!--<input id="status" name="status" th:field="*{status}" class="form-control" type="text">-->
+				<!--</div>-->
+			<!--</div>-->
+		</form>
+    </div>
+    <div th:include="include::footer"></div>
+    <script type="text/javascript">
+		var prefix = ctx + "system/sysOss";
+		$("#form-sysOss-edit").validate({
+			rules:{
+				xxxx:{
+					required:true,
+				},
+			}
+		});
+		
+		function submitHandler() {
+	        if ($.validate.form()) {
+	            $.operate.save(prefix + "/edit", $('#form-sysOss-edit').serialize());
+	        }
+	    }
+	</script>
+</body>
+</html>

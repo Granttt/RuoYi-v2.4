@@ -1,9 +1,10 @@
 package com.ruoyi.common.utils;
 
+import org.apache.commons.lang3.time.DateFormatUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import org.apache.commons.lang3.time.DateFormatUtils;
 
 /**
  * 时间工具类
@@ -96,5 +97,14 @@ public class DateUtils
         Date now = new Date();
         return DateFormatUtils.format(now, "yyyyMMdd");
     }
-
+    /**
+     * 将时间戳转换为时间
+     */
+    public static String stampToDate(Long s){
+        String res;
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        Date date = new Date(s);
+        res = simpleDateFormat.format(date);
+        return res;
+    }
 }

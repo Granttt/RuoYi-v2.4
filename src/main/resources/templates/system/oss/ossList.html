@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<meta charset="utf-8">
+<head th:include="include :: header"></head>
+<body class="gray-bg">
+
+<div class="container-div">
+    <div class="row">
+        <div class="col-sm-12 select-table table-striped">
+            <!--<table id="bootstrap-table" data-mobile-responsive="true"></table>-->
+            <th:block th:each="oss,index:${ossEntityList}">
+                <p th:text="${oss.id}"></p></br>
+                <img alt="l" th:src="${oss.url}">
+                <p th:text="${oss.key}"></p></br>
+                <p th:text="${oss.hash}"></p></br>
+                <p th:text="${oss.fsize}"></p></br>
+                <p th:text="${oss.mimeType}"></p></br>
+                <p th:text="${oss.uploadDate}"></p></br>
+            </th:block>
+        </div>
+    </div>
+</div>
+<div th:include="include :: footer"></div>
+<script th:inline="javascript">
+    var prefix = ctx + "system/sysOss";
+
+    $(function() {
+        var options = {
+            url: prefix + "/getList",
+            search: false,
+            showExport: false,
+            columns: [{
+                checkbox: false
+            },
+                {
+                    field: 'id',
+                    title: '序号'
+                },
+                {
+                    field: 'key',
+                    title: 'key'
+                },
+                {
+                    field: 'hash',
+                    title: 'hash'
+                },
+                {
+                    field: 'fsize',
+                    title: 'fsize'
+                },
+                {
+                    field: 'mimeType',
+                    title: 'mimeType'
+                },
+                {
+                    field: 'putTime',
+                    title: 'putTime'
+                },
+                {
+                    field: 'endUser',
+                    title: 'endUser'
+                }]
+        };
+        $.table.init(options);
+    });
+</script>
+</body>
+</html>
