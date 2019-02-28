@@ -60,8 +60,9 @@ spring:
        max-request-size:  30MB
   devtools:
     restart:
-      #热部署开关
-      enabled: true
+      #热部署开关，如果不想被重启，在false,这种方式下，重启的类加载仍然是初始化的，但是不会监控资源的变化
+      #说白了就是静态（html,js,css等）资源被修改后，只会重新加载，而不会重启
+      enabled: false
 # MyBatis
 mybatis:
     # 搜索指定包别名
