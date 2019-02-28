@@ -15,6 +15,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 
 /**
@@ -35,9 +37,14 @@ public class FileUploadController {
 
     /** 上传图片文件夹 */
     private static final String UPLOAD_PATH = Global.getProfile();
+    /** 下载图片文件夹 */
+    private static final String DOWN_PATH = Global.getDownloadPath();
 
     /** 上传图片URL */
     private static final String URL_PATH = Global.getVisiteUrl();
+
+    /** 下载图片URL */
+    private static final String URL_DOWN = Global.getDownUrl();
 
     /** 上传图片 */
     @PostMapping("/upload")
@@ -134,4 +141,14 @@ public class FileUploadController {
         return UploadImageResModel.ok(1,fileName,url);
     }
 
+    @RequestMapping("/download")
+    @ResponseBody
+    public Map<String,Object> download(@RequestParam("path") String path){
+        Map map =new HashMap();
+        CloudStorageService storageService = OSSFactory.build();
+        String downUrl=storageService.download(DOWN_PATH,path);
+        map.put("state","1");
+        map.put("rul",URL_DOWN.concat(downUrl));
+        return map;
+    }
 }

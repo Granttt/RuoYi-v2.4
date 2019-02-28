@@ -84,3 +84,14 @@ RuoYi 博客：https://www.oschina.net/p/ruoyi
 增加cms文章功能
 
 图片存储：七牛云，阿里云等OSS
+
+2019-2-28
+添加阿里云OSS下载文件功能（流式读取）及下载到本地功能
+
+参考文档
+
+https://help.aliyun.com/document_detail/32009.html?spm=a2c4g.11186623.6.658.64e273205nUqj4
+
+http://aliyun_portal_storage.oss.aliyuncs.com/oss_api/oss_javahtml/object.html#id13
+
+参考路径com.ruoyi.project.upload.FileUploadController

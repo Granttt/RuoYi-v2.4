@@ -7,7 +7,9 @@ import com.ruoyi.project.upload.cloud.CloudConstant.CloudService;
 
 /**
  * 文件上传Factory
- *
+ * 阿里云OSS参考文档
+ * https://help.aliyun.com/document_detail/32011.html?spm=a2c4g.11186623.6.659.64e27320p9MjBw
+ * http://aliyun_portal_storage.oss.aliyuncs.com/oss_api/oss_javahtml/object.html#id13
  * @author xingyu
  */
 public final class OSSFactory {

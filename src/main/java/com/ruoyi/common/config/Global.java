@@ -127,6 +127,12 @@ public class Global {
     public static String getVisiteUrl() {
         return getConfig("ruoyi.visiteUrl");
     }
+/**
+     * 获取下载读取路径
+     */
+    public static String getDownUrl() {
+        return getConfig("ruoyi.dawnloadUrl");
+    }
 
     /**
      * 获取作者

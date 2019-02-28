@@ -10,6 +10,8 @@ ruoyi:
   profile: D:/profile/
   # 资源读取URL
   visiteUrl: http://127.0.0.1:8090/profile/
+  #下载资源读取URL
+  dawnloadUrl: http://127.0.0.1:8090/profile/download/
   # 获取ip地址开关
   addressEnabled: false
 #开发环境配置
