@@ -95,3 +95,5 @@ https://help.aliyun.com/document_detail/32009.html?spm=a2c4g.11186623.6.658.64e2
 http://aliyun_portal_storage.oss.aliyuncs.com/oss_api/oss_javahtml/object.html#id13
 
 参考路径com.ruoyi.project.upload.FileUploadController
+
+@ComponentScan注解，自定义扫描路径
