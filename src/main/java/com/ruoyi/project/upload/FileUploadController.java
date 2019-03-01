@@ -141,6 +141,11 @@ public class FileUploadController {
         return UploadImageResModel.ok(1,fileName,url);
     }
 
+    /**
+     * 云存储下载
+     * @param path
+     * @return
+     */
     @RequestMapping("/download")
     @ResponseBody
     public Map<String,Object> download(@RequestParam("path") String path){
