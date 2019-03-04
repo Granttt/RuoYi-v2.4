@@ -53,7 +53,8 @@ spring:
   jackson:
     time-zone: GMT+8
     date-format: yyyy-MM-dd HH:mm:ss
-  profiles: 
+  profiles:
+    #数据源
     active: druid
   #文件上传
   servlet:

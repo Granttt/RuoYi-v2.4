@@ -32,6 +32,8 @@ http://webapplayers.com/inspinia_admin-v2.7.1
 14. 系统接口：根据业务代码自动生成相关的api接口文档。
 15. 在线构建器：拖动表单元素生成相应的HTML代码。
 16. 连接池监视：监视当期系统数据库连接池状态，可进行分析SQL找出系统性能瓶颈。
+17. 新增CMS模块：文章管理，编写，公告的发布等。
+18. OSS模块：集成阿里云OSS，七牛云，腾讯云等云存储。
 ## 在线体验
 > admin/admin123
 
@@ -63,6 +65,12 @@ http://webapplayers.com/inspinia_admin-v2.7.1
 	<tr>
         <td><img src="https://static.oschina.net/uploads/space/2018/0902/132617_MLmV_1438828.png"/></td>
         <td><img src="https://static.oschina.net/uploads/space/2018/0902/132626_3iBs_1438828.png"/></td>
+    </tr>
+    <tr>
+        <td><img src="https://gaoxiyang.oss-cn-beijing.aliyuncs.com/ruoyi/1.png"/></td>
+        <td><img src="https://gaoxiyang.oss-cn-beijing.aliyuncs.com/ruoyi/2.png"/></td>
+    </tr> <tr>
+        <td><img src="https://gaoxiyang.oss-cn-beijing.aliyuncs.com/ruoyi/3.png"/></td>
     </tr>
 </table>
 
@@ -96,4 +104,8 @@ http://aliyun_portal_storage.oss.aliyuncs.com/oss_api/oss_javahtml/object.html#i
 
 参考路径com.ruoyi.project.upload.FileUploadController
 
-@ComponentScan注解，自定义扫描路径
+@ComponentScan注解，自定义扫描路径。如果你自定义的包不在boot启动类及其父类下，这需要使用该注解
+指明你要扫描的包路径（用于springboot启动类上）
+
+##前端表格组件 
+bootstrap，参考链接 https://www.cnblogs.com/laowangc/p/8875526.html

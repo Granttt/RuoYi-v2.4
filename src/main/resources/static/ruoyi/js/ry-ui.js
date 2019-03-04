@@ -12,6 +12,7 @@
 			_params: {},
 			// 初始化表格参数
 			init: function(options) {
+                $('#bootstrap-table').bootstrapTable('destroy');
 				$.table._option = options;
 				$.table._params = $.common.isEmpty(options.queryParams) ? $.table.queryParams : options.queryParams;
 				_sortOrder = $.common.isEmpty(options.sortOrder) ? "asc" : options.sortOrder;
