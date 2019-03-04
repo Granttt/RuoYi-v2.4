@@ -99,10 +99,12 @@ http://aliyun_portal_storage.oss.aliyuncs.com/oss_api/oss_javahtml/object.html#i
 @ComponentScan注解，自定义扫描路径。如果你自定义的包不在boot启动类及其父类下，这需要使用该注解
 指明你要扫描的包路径（用于springboot启动类上）
 
-##前端表格组件 
+##  前端表格组件 
+
 bootstrap，参考链接 https://www.cnblogs.com/laowangc/p/8875526.html
 
-##ruoyi登陆用户名密码验证流程：
+##  ruoyi登陆用户名密码验证流程：
+
 com.ruoyi.project.system.user.controller.LoginController.AjaxResult(主要是subject.login(token)) -> 
 com.ruoyi.framework.shiro.realm.UserRealm.doGetAuthenticationInfo(登录认证) -> com.ruoyi.framework.shiro.service.LoginService.login(里面的 
 passwordService.validate(user, password)) ->com.ruoyi.framework.shiro.service.PasswordService.validate ->
