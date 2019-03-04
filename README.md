@@ -51,20 +51,12 @@ http://webapplayers.com/inspinia_admin-v2.7.1
         <td><img src="https://static.oschina.net/uploads/space/2018/0902/132442_umjM_1438828.png"/></td>
     </tr>
     <tr>
-        <td><img src="https://static.oschina.net/uploads/space/2018/0902/132449_OtY8_1438828.png"/></td>
-        <td><img src="https://static.oschina.net/uploads/space/2018/0902/132454_4Evz_1438828.png"/></td>
-    </tr>
-    <tr>
         <td><img src="https://static.oschina.net/uploads/space/2018/0902/132520_Zzkj_1438828.png"/></td>
         <td><img src="https://static.oschina.net/uploads/space/2018/0902/132539_5bJe_1438828.png"/></td>
     </tr>
 	<tr>
         <td><img src="https://static.oschina.net/uploads/space/2018/0902/132548_ne4U_1438828.png"/></td>
         <td><img src="https://static.oschina.net/uploads/space/2018/0902/132557_Fab4_1438828.png"/></td>
-    </tr>
-	<tr>
-        <td><img src="https://static.oschina.net/uploads/space/2018/0902/132617_MLmV_1438828.png"/></td>
-        <td><img src="https://static.oschina.net/uploads/space/2018/0902/132626_3iBs_1438828.png"/></td>
     </tr>
     <tr>
         <td><img src="https://gaoxiyang.oss-cn-beijing.aliyuncs.com/ruoyi/1.png"/></td>
@@ -109,3 +101,9 @@ http://aliyun_portal_storage.oss.aliyuncs.com/oss_api/oss_javahtml/object.html#i
 
 ##前端表格组件 
 bootstrap，参考链接 https://www.cnblogs.com/laowangc/p/8875526.html
+
+##ruoyi登陆用户名密码验证流程：
+com.ruoyi.project.system.user.controller.LoginController.AjaxResult(主要是subject.login(token)) -> 
+com.ruoyi.framework.shiro.realm.UserRealm.doGetAuthenticationInfo(登录认证) -> com.ruoyi.framework.shiro.service.LoginService.login(里面的 
+passwordService.validate(user, password)) ->com.ruoyi.framework.shiro.service.PasswordService.validate ->
+com.ruoyi.framework.shiro.service.PasswordService.encryptPassword(验证密码方法，MD5加密)
