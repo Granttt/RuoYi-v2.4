@@ -96,6 +96,16 @@ http://aliyun_portal_storage.oss.aliyuncs.com/oss_api/oss_javahtml/object.html#i
 
 参考路径com.ruoyi.project.upload.FileUploadController
 
+2019-03-06
+目前只有管理员与普通用户两级，所以默认同级可强退（管理员除外）,如果后期加入更多级别用户，需要细致判断规则
+
+加入判断后sys_user_online表新增了一个字段user_id用来记录登录用户id，然后通过id查询此用户的角色，再进一步判断是否可强退
+需要注意，如果沿用老框架的，要把项目中user_id字段删掉。
+
+wangbo_website_new.sql为增加字段后的新数据库文件，wangbo_website.sql为老文件
+
+参考路径：com.ruoyi.project.monitor.online.controller.UserOnlineController
+
 @ComponentScan注解，自定义扫描路径。如果你自定义的包不在boot启动类及其父类下，这需要使用该注解
 指明你要扫描的包路径（用于springboot启动类上）
 

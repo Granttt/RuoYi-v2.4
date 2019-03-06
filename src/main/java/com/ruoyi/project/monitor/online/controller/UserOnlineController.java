@@ -1,14 +1,5 @@
 package com.ruoyi.project.monitor.online.controller;
 
-import java.util.List;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 import com.ruoyi.common.utils.security.ShiroUtils;
 import com.ruoyi.framework.aspectj.lang.annotation.Log;
 import com.ruoyi.framework.aspectj.lang.enums.BusinessType;
@@ -19,6 +10,15 @@ import com.ruoyi.framework.web.page.TableDataInfo;
 import com.ruoyi.project.monitor.online.domain.OnlineSession;
 import com.ruoyi.project.monitor.online.domain.UserOnline;
 import com.ruoyi.project.monitor.online.service.IUserOnlineService;
+import com.ruoyi.project.system.role.domain.Role;
+import com.ruoyi.project.system.user.domain.User;
+import com.ruoyi.project.system.user.service.IUserService;
+import org.apache.shiro.authz.annotation.RequiresPermissions;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 /**
  * 在线用户监控
@@ -33,6 +33,9 @@ public class UserOnlineController extends BaseController
 
     @Autowired
     private IUserOnlineService userOnlineService;
+
+    @Autowired
+    private IUserService userService;
 
     @Autowired
     private OnlineSessionDAO onlineSessionDAO;
@@ -90,6 +93,17 @@ public class UserOnlineController extends BaseController
     public AjaxResult forceLogout(String sessionId)
     {
         UserOnline online = userOnlineService.selectOnlineById(sessionId);
+        User user = userService.selectUserById(online.getUserId());
+
+        //目前只有管理员与普通用户两级，所以默认同级可强退（管理员除外）
+        //如果后期加入更多级别用户，需要细致判断规则
+        if (user.getRoles().size()>0){
+            for (Role role : user.getRoles()) {
+                if (role.getRoleId().intValue()==1){
+                    return error("此用户为管理员，不可强退");
+                }
+            }
+        }
         if (sessionId.equals(ShiroUtils.getSessionId()))
         {
             return error("当前登陆用户无法强退");

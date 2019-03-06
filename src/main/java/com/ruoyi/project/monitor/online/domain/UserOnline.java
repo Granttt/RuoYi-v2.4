@@ -1,8 +1,9 @@
 package com.ruoyi.project.monitor.online.domain;
 
-import java.util.Date;
 import com.ruoyi.framework.web.domain.BaseEntity;
 import com.ruoyi.project.monitor.online.domain.OnlineSession.OnlineStatus;
+
+import java.util.Date;
 
 /**
  * 当前在线会话 sys_user_online
@@ -14,6 +15,9 @@ public class UserOnline extends BaseEntity
     private static final long serialVersionUID = 1L;
     /** 用户会话id */
     private String sessionId;
+
+    /** 用户ID */
+    private Long userId;
 
     /** 部门名称 */
     private String deptName;
@@ -47,6 +51,14 @@ public class UserOnline extends BaseEntity
 
     /** 备份的当前用户会话 */
     private OnlineSession session;
+
+    public Long getUserId() {
+        return userId;
+    }
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
 
     public String getSessionId()
     {

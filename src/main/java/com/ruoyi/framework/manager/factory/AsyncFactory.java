@@ -1,8 +1,5 @@
 package com.ruoyi.framework.manager.factory;
 
-import java.util.TimerTask;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import com.ruoyi.common.constant.Constants;
 import com.ruoyi.common.utils.AddressUtils;
 import com.ruoyi.common.utils.LogUtils;
@@ -17,6 +14,10 @@ import com.ruoyi.project.monitor.online.service.IUserOnlineService;
 import com.ruoyi.project.monitor.operlog.domain.OperLog;
 import com.ruoyi.project.monitor.operlog.service.IOperLogService;
 import eu.bitwalker.useragentutils.UserAgent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.TimerTask;
 
 /**
  * 异步工厂（产生任务用）
@@ -42,6 +43,7 @@ public class AsyncFactory
             public void run()
             {
                 UserOnline online = new UserOnline();
+                online.setUserId(session.getUserId());
                 online.setSessionId(String.valueOf(session.getId()));
                 online.setDeptName(session.getDeptName());
                 online.setLoginName(session.getLoginName());
